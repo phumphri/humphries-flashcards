@@ -1,0 +1,40 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta charset="utf-8"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/viterbi_3.css') }}" />
+<link rel="shortcut icon" href="https://www.usc.edu/favicon.ico" />
+<link rel="favicon" href="https://www.usc.edu/favicon.ico" />
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
+{% endblock %}
+
+
+{% block body %}
+{{ super() }}
+<div class="container-fluid">
+
+    <div class="row cardinal_background">
+        <div class="col-lg-2 cardinal project_name">
+            <img src="https://vsoeapp1.vsoe.usc.edu/images/USC-Bar-cardinal.gif"><br />
+        </div>
+        <div class="col-lg-7 cardinal_background project_name">
+            {{ project_name|title }}
+
+        </div>
+        <div class="col-lg-3 cardinal_background bootcamp_name">
+            <p class="gold">Patrick Humphries, M.B.A.<br />
+                Applied Data Science at U.S.C.<br />
+                {{ moment(current_time).format('LLL') }}, {{ moment(current_time).fromNow(refresh = True) }}.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

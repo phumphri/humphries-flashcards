@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+{% extends "base.html" %}
+
+{% block title %}
+Flashcards
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<title>Transactions</title>
+<script type="text/javascript" src="{{ url_for('static', filename='js/bindings.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getFirstWord.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getPreviousWord.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getWord.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getNextWord.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getLastWord.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getRandomWord.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/addWord.js') }}"></script>
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/updateWord.js') }}"></script> -->
+<script type="text/javascript" src="{{ url_for('static', filename='js/deleteWord.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/clearWord.js') }}"></script>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/hideFields.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/showWord.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/hideWord.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/hideDefinition.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/showDefinition.js') }}"></script>
+
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/checkSpelling.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/checkDefinition.js') }}"></script>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/selectHelp.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/oops.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getClasses.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getWeeks.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/getWords.js') }}"></script>
+
+<script type="text/javascript" src="{{ url_for('static', filename='js/drawDiagram.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/clearDiagram.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/checkScreen.js') }}"></script>
+
+
+<script>
+    window.onload = function () {
+        checkScreen()
+        bindings()
+        getClasses()
+        sc.addEventListener("click", function () { getWeeks(); })
+        sw.addEventListener("click", function () { getWords(); })
+        getFirstWord()
+    }
+</script>
+
+{% endblock %}
+
+{% block body %}
+{{ super() }}
+
+<div class="container-fluid">
+
+    <!-- Row 1:  There four columns used to select Class, Week, Navigate, and Hide Fields -->
+    <div class="row">
+
+        <!-- Row 1, Column 1:  Select Class. -->
+        <div class="col-lg-2">
+            <fieldset>
+                <legend>Selected Class</legend>
+                <select id="sc" class="input" size="3" multiple="single">
+                    {% for class in classes %}
+                    <option label="{{class}}">{{class}}</option>
+                    {% endfor %}
+                </select>
+            </fieldset>
+
+        </div>
+
+        <!-- Row 1, Column 2:  Select Week. -->
+        <div class="col-lg-2">
+            <fieldset>
+                <legend>Selected Week</legend>
+                <select id="sw" class="input" size="3" multiple="single">
+                    {% for class in classes %}
+                    <option label="{{week}}">{{week}}</option>
+                    {% endfor %}
+                </select>
+            </fieldset>
+
+        </div>
+
+        <!-- Row 1, Column 3:  Navigation. -->
+        <div id="wsd" class="col-lg-4">
+            <fieldset>
+                <legend>Navigation</legend>
+                <button type="button" onclick="getFirstWord(); ">
+                    First
+                </button>
+                <button type="button" onclick="getPreviousWord(); ">
+                    Previous
+                </button>
+                <button type="button" onclick="getWord(); ">
+                    Get
+                </button>
+                <button type="button" onclick="getNextWord(); ">
+                    Next
+                </button>
+                <button type="button" onclick="getLastWord(); ">
+                    Last
+                </button>
+                <button type="button" onclick="getRandomWord(); ">
+                    Random
+                </button>
+            </fieldset>
+        </div>
+
+        <!-- Row 1, Column 4:  Hide Fields -->
+        <div class="col-lg-2">
+
+            <fieldset>
+                <legend>Hide Fields</legend>
+                <input id="hs" type=radio name="hide" value=true /> Spelling
+                <input id="hd" type=radio name="hide" value=true /> Definition
+                <input id="hn" type=radio name="hide" value=true checked /> None
+            </fieldset>
+        </div>
+
+        <!-- Row 1, Column 5:  Draw Actions -->
+        <div class="col-lg-2">
+            <fieldset>
+                <legend>Drawing Actions</legend>
+                <button type="button" id="dd" onclick="drawDiagram(); ">Draw</button>
+                <button type="button" id="cd" onclick="clearDiagram(); ">Clear</button>
+            </fieldset>
+        </div>
+    </div>
+
+        <!-- Row 2:  There are three columns for Word Details, Actions, Status.  -->
+        <div class="row">
+
+            <!-- Row 2, Column 1:  Word Details, Actions, Status-->
+            <div class="col-lg-4">
+
+                <!-- Word Details -->
+                <fileset>
+                    <legend>Word Details</legend>
+                    <table id="wdt" title="Word Detail Table" class="table">
+                        <tr>
+                            <th>Spelling</th>
+                            <td>
+                                <input id="ws" type="text" size="40" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Definition</th>
+                            <td>
+                                <textarea id="wd" rows="5" cols="40"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Grammar</th>
+                            <td>
+                                <input id="wg" type="text" size="40" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Example</th>
+                            <td>
+                                <textarea id="we" rows="5" cols="40"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </fileset>
+
+                <!-- Actions -->
+                <fileset>
+                    <legend>Actions</legend>
+                    <button type="button" onclick="checkSpelling(); ">Spelling</button>
+                    <button type="button" onclick="checkDefinition(); ">Definition</button>
+                    <button type="button" onclick="showWord(); showDefinition(); ">Show</button>
+                    <button type="button" id="cw" onclick="clearWord(); ">Clear</button>
+                    <button type="button" id="aw" onclick="addWord();">Add</button>
+                    <button type="button" id="dw" onclick="deleteWord(); ">Delete</button>
+                    <a href="/oops" target="_blank"><b>Oops!</b></a>
+                    <a href="/bummer" target="_blank"><b>Bummer!</b></a>
+                </fileset>
+
+                <!-- Status -->
+                <fileset>
+                    <legend>Status</legend>
+                    <textarea id="st" name="status" cols="50" rows="5" readonly="readonly"></textarea>
+                </fileset>
+            </div>
+
+            <!-- Row 2, Column 2:  My Guess, Word Performance, Help -->
+            <div class="col-lg-4">
+
+                <!-- My Guess -->
+                <fileset>
+                    <legend>My Guess</legend>
+                    <table class="table">
+                        <tr>
+                            <th>My Spelling</th>
+                            <td>
+                                <input id="ms" type="text" size="40" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>My Definition</th>
+                            <td>
+                                <textarea id="md" tabindex="1" rows="5" cols="40"></textarea>
+                            </td>
+                        </tr>
+
+                    </table>
+                </fileset>
+
+                <!-- Word Performance -->
+                <fileset>
+                    <legend>Word Performance</legend>
+                    <table id="wdt" title="Word Performance Table" class="table">
+                        <tr>
+                            <th>Word Attempts</th>
+                            <td>
+                                <input id="wa" type="number" size="5" />
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Word Correct</th>
+                            <td>
+                                <input id="wc" type="number" size="5" readonly />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Word Wrong</th>
+                            <td>
+                                <input id="ww" type="number" size="5" readonly />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Word Percentage</th>
+                            <td>
+                                <input id="wp" type="number" size="5" readonly />
+                            </td>
+                        </tr>
+                    </table>
+                </fileset>
+
+                <!-- Help -->
+                <fileset>
+                    <legend>Help (under construction)</legend>
+                    <ul>
+                        <li onclick="selectHelp('select'); ">Word Selection Table</li>
+                        <li onclick="selectHelp('check'); ">Check Button</li>
+                        <li onclick="selectHelp('show'); ">Show Button</li>
+                        <li onclick="selectHelp('random'); ">Random Button</li>
+                        <li onclick="selectHelp('clear'); ">Clear Button</li>
+                        <li onclick="selectHelp('submit'); ">Submit Button</li>
+                        <li onclick="selectHelp('save'); ">Save Button</li>
+                    </ul>
+                </fileset>
+            </div>
+
+            <!-- Row 2, column 3:  Drawing Canvas, Drawing Instructions -->
+            <div class="col-lg-4">
+
+                <!-- Drawing Canvas -->
+                <fileset>
+                    <legend>Drawing Canvas</legend>
+                    <canvas id="dc" width="600" height="400" style="border:1px solid grey;"></canvas>
+                </fileset>
+
+                <!-- Drawing Instructions -->
+                <fileset>
+                    <legend>Drawing Instructions</legend>
+                    <textarea id="di" name="status" cols="70" rows="15"></textarea>
+                </fileset>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
