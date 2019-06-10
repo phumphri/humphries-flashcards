@@ -227,7 +227,6 @@ def delete_word(class_code, week):
         raise InternalServerError('An Exception was thrown:  ' + str(f))
 
 
-
 # S3 Get Classes
 def s3_get_classes():
 
@@ -236,13 +235,16 @@ def s3_get_classes():
     # This will contained the filtered selection of the contents of the bucket.
     classes = []
     
-    ACCESS_KEY_ID="AKIAQRE6BDJK2G5C3E5R"
-    SECRET_ACCESS_KEY="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"
+    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
+    SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
+    print('ACCESS_KEY_ID_FOR_S3:', ACCESS_KEY_ID_FOR_S3)
+    print('SECRET_ACCESS_KEY_FOR_S3:', SECRET_ACCESS_KEY_FOR_S3)
     
     try:
         client = boto3.client('s3', 
-                              aws_access_key_id=ACCESS_KEY_ID, 
-                              aws_secret_access_key=SECRET_ACCESS_KEY)
+                              aws_access_key_id=ACCESS_KEY_ID_FOR_S3, 
+                              aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
+
     except Exception as e:
         print("e:", e)
 
@@ -278,13 +280,13 @@ def s3_get_weeks(class_code):
     # This will contained the filtered selection of the contents of the bucket.
     weeks = []
     
-    ACCESS_KEY_ID="AKIAQRE6BDJK2G5C3E5R"
-    SECRET_ACCESS_KEY="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"
+    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
+    SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
     
     try:
         client = boto3.client('s3', 
-                              aws_access_key_id=ACCESS_KEY_ID, 
-                              aws_secret_access_key=SECRET_ACCESS_KEY)
+                              aws_access_key_id=ACCESS_KEY_ID_FOR_S3, 
+                              aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
     except Exception as e:
         print('Exception was thrown:', str(e))
         raise InternalServerError('Exception was thrown:  ' + str(e))
@@ -324,13 +326,14 @@ def s3_get_words(class_code, week):
     # This will contained the filtered selection of the contents of the bucket.
     words = []
     
-    ACCESS_KEY_ID="AKIAQRE6BDJK2G5C3E5R"
-    SECRET_ACCESS_KEY="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"
+    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
+    SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
     
     try:
         client = boto3.client('s3', 
-                              aws_access_key_id=ACCESS_KEY_ID, 
-                              aws_secret_access_key=SECRET_ACCESS_KEY)
+                              aws_access_key_id=ACCESS_KEY_ID_FOR_S3, 
+                              aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
+
     except Exception as e:
         print('Exception was thrown:', str(e))
         raise InternalServerError('Exception was thrown:  ' + str(e))
@@ -378,13 +381,14 @@ def s3_get_weeks(class_code):
     # This will contained the filtered selection of the contents of the bucket.
     weeks = []
     
-    ACCESS_KEY_ID="AKIAQRE6BDJK2G5C3E5R"
-    SECRET_ACCESS_KEY="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"
+    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
+    SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
     
     try:
         client = boto3.client('s3', 
-                              aws_access_key_id=ACCESS_KEY_ID, 
-                              aws_secret_access_key=SECRET_ACCESS_KEY)
+                              aws_access_key_id=ACCESS_KEY_ID_FOR_S3, 
+                              aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
+
     except Exception as e:
         print('Exception was thrown:', str(e))
         raise InternalServerError('Exception was thrown:  ' + str(e))
@@ -431,13 +435,13 @@ def s3_add_word(class_code, week, word):
     # Convert the string into a byte stream.
     word = str.encode(word)
     
-    ACCESS_KEY_ID="AKIAQRE6BDJK2G5C3E5R"
-    SECRET_ACCESS_KEY="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"
+    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
+    SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
     
     try:
         client = boto3.client('s3', 
-                              aws_access_key_id=ACCESS_KEY_ID, 
-                              aws_secret_access_key=SECRET_ACCESS_KEY)
+                              aws_access_key_id=ACCESS_KEY_ID_FOR_S3, 
+                              aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
 
         client.put_object(Body=word, Bucket=bucket_name, Key=key)
 
@@ -461,6 +465,8 @@ def s3_add_word(class_code, week, word):
 # S3 Delete Word
 def s3_delete_word(class_code, week, word):
 
+    bucket_name = 'humphries-flashcards'
+
     word_spelling = word["word_spelling"]
 
     key = class_code + '/' + week + '/' + word_spelling + '.json'
@@ -471,13 +477,13 @@ def s3_delete_word(class_code, week, word):
     # Convert the string into a byte stream.
     word = str.encode(word)
     
-    ACCESS_KEY_ID="AKIAQRE6BDJK2G5C3E5R"
-    SECRET_ACCESS_KEY="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"
+    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
+    SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
     
     try:
         client = boto3.client('s3', 
-                              aws_access_key_id=ACCESS_KEY_ID, 
-                              aws_secret_access_key=SECRET_ACCESS_KEY)
+                              aws_access_key_id=ACCESS_KEY_ID_FOR_S3, 
+                              aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
 
         client.delete_object(Bucket=bucket_name, Key=key)
 
