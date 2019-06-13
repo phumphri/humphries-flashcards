@@ -353,14 +353,14 @@ def s3_get_words(class_code, week):
                         # There will be media files stored with the json files.
                         if key.endswith('.json'):
 
-                            print('\n\nKey:' + key)
+                            # print('\n\nKey:' + key)
 
                             s = o["Body"].read().decode('utf8')
 
                             s = json.loads(s)
-                            print('Download from S3:')
-                            pp = pprint.PrettyPrinter(indent=4)
-                            pp.pprint(s)
+                            # print('Download from S3:')
+                            # pp = pprint.PrettyPrinter(indent=4)
+                            # pp.pprint(s)
 
                             if "word_diagram" not in s:
                                 print("\n\nword_diagram was None.")
@@ -370,10 +370,10 @@ def s3_get_words(class_code, week):
                             # Add word only if it does not exist in words.
                             try:
                                 words.index(s)
-                                print('word was not added to words.')
+                                # print('word was not added to words.')
                             except ValueError as e:
                                 words.append(s)
-                                print('word was added to words.')
+                                # print('word was added to words.')
 
     except Exception as e:
         print('Exception was thrown:', str(e))
