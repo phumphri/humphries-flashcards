@@ -29,15 +29,18 @@ function getWords() {
 
     request.send(null)
 
+    words_added = 0
+
     request.onreadystatechange = function () {
         if (request.readyState == XMLHttpRequest.DONE) {
             if (request.status == 200) {
 
                 // Clear session Storage.
-                for (i = 0; i < sessionStorage.length; i++) {
-                    key = 'word' + i.toString()
-                    sessionStorage.removeItem(key)
-                }
+                // for (i = 0; i < sessionStorage.length; i++) {
+                //     key = 'word' + i.toString()
+                //     sessionStorage.removeItem(key)
+                // }
+                sessionStorage.clear()
 
                 // Parse the response string into a JSON object (associative array).
                 responseText = request.responseText
@@ -46,7 +49,7 @@ function getWords() {
                 // The "words" attribute has an array of "word" JSON objects.
                 words = words["words"]
 
-                st.value = "Words were found.  Screen width:" + screen.width
+                st.value = "Words were found."
 
                 // Populate Session Storage with word JSON objects.
                 for (i in words) {
@@ -54,6 +57,7 @@ function getWords() {
                     key = 'word' + i.toString()
                     item = JSON.stringify(word)
                     sessionStorage.setItem(key, item)
+                    words_added += 1
                 }
             }
             else if (request.status == 404) {
@@ -63,6 +67,9 @@ function getWords() {
                 st.value = "Unsuccessful request:  " + request.readyState + "  " + request.status + ".  Call Patrick."
             }
         }
+        st.value += "\nWords added:  " + words_added
+        st.value += "\nsessionStorage.length:  " + sessionStorage.length
+        st.value += "\nlocation.host:  " + location.host
         hideFields()
         return
     }

@@ -237,8 +237,6 @@ def s3_get_classes():
     
     ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
     SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
-    print('ACCESS_KEY_ID_FOR_S3:', ACCESS_KEY_ID_FOR_S3)
-    print('SECRET_ACCESS_KEY_FOR_S3:', SECRET_ACCESS_KEY_FOR_S3)
     
     try:
         client = boto3.client('s3', 
@@ -280,13 +278,13 @@ def s3_get_weeks(class_code):
     # This will contained the filtered selection of the contents of the bucket.
     weeks = []
     
-    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
     SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
     
     try:
         client = boto3.client('s3', 
                               aws_access_key_id=ACCESS_KEY_ID_FOR_S3, 
                               aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
+                              
     except Exception as e:
         print('Exception was thrown:', str(e))
         raise InternalServerError('Exception was thrown:  ' + str(e))
@@ -345,26 +343,37 @@ def s3_get_words(class_code, week):
                 json_objects = response_item[1]
                 for json_object in json_objects: 
                     key = json_object['Key']
-                    if key.startswith(class_code):
-                        if key.find(week) > -1:
-                            o = client.get_object(Bucket=bucket_name, Key=key)
+
+                    # Only select words for the selected class adn week.
+                    if key.startswith(class_code + '/' + week):
+
+                        o = client.get_object(Bucket=bucket_name, Key=key)
+
+                        # Only select S3 objects that are json files.
+                        # There will be media files stored with the json files.
+                        if key.endswith('.json'):
+
+                            print('\n\nKey:' + key)
+
                             s = o["Body"].read().decode('utf8')
 
                             s = json.loads(s)
-                            # print('\n\nDownload from S3:')
-                            # pp = pprint.PrettyPrinter(indent=4)
-                            # pp.pprint(s)
+                            print('Download from S3:')
+                            pp = pprint.PrettyPrinter(indent=4)
+                            pp.pprint(s)
 
                             if "word_diagram" not in s:
                                 print("\n\nword_diagram was None.")
                                 s["word_diagram"] = [{"dummy":"dummy"}]
                                 print("word_diagram was set to dummy.\n")
 
-                            # Update or append word to words.
+                            # Add word only if it does not exist in words.
                             try:
                                 words.index(s)
+                                print('word was not added to words.')
                             except ValueError as e:
                                 words.append(s)
+                                print('word was added to words.')
 
     except Exception as e:
         print('Exception was thrown:', str(e))

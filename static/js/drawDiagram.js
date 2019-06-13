@@ -30,6 +30,19 @@ function drawDiagram() {
 
         switch (drawing_object["o"]) {
 
+            case "img":
+                s = "https://humphries-flashcards.s3-us-west-1.amazonaws.com/"
+                s += sc.value.replace(' ', '+')
+                s += '/'
+                s += sw.value.replace(' ', '+')
+                s += '/'
+                s += drawing_object["image_source"].replace(' ', '+')
+                img = new Image()
+                img.onload = function(){
+                    ctx.drawImage(img,0,0,600,400)
+                  }
+                img.src = s
+
             case "strokeStyle":
                 color = drawing_object["color"]
                 ctx.strokeStyle = color
