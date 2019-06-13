@@ -58,6 +58,7 @@ function getWords() {
                     item = JSON.stringify(word)
                     sessionStorage.setItem(key, item)
                     words_added += 1
+                    console.log('Key:  ' + key + '    Item:  ' + item)
                 }
             }
             else if (request.status == 404) {
