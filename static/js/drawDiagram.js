@@ -38,8 +38,27 @@ function drawDiagram() {
                 s += '/'
                 s += drawing_object["image_source"].replace(' ', '+')
                 img = new Image()
+
                 img.onload = function(){
-                    ctx.drawImage(img,0,0,600,400)
+
+                    inw = img.naturalWidth
+                    inh = img.naturalHeight
+    
+                    // Calculate the ratio of the canvas dimensions to those of the image.
+                    inwr = 600 / inw
+                    inhr = 400 / inh
+    
+                    // Select the smaller of ratios, so the image will fit in the canvas for height and width.
+                    if (inwr > inhr)
+                        image_ratio = inhr
+                    else
+                        image_ratio = inwr
+    
+                    // Calculate the display size of the image.
+                    image_width = inw * image_ratio
+                    image_height = inh * image_ratio
+                        
+                    ctx.drawImage(img,0,0,image_width,image_height)
                   }
                 img.src = s
 
