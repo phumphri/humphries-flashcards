@@ -62,6 +62,7 @@ function getWeeks()
                     option.value = s
                     sw.add(option)
                 }
+                st.value = 'Select week.'
             }
             else if (request.status = 404)
             {

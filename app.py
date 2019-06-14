@@ -162,8 +162,10 @@ def add_word(class_code, week):
 
             # The transported string is converted into a json object.
             word = request.get_json()
+            # print('\n\nCalled add_word/' + class_code + '/' + week + ' with the following word:')
             # pp = pprint.PrettyPrinter(indent=4)
             # pp.pprint(word)
+            # print('\n')
 
             # Database update returns an HTTP status code.
             status_code = s3_add_word(class_code, week, word)
@@ -467,7 +469,10 @@ def s3_add_word(class_code, week, word):
 
         raise InternalServerError('Exception was thrown:  ' + str(e))
 
-    print('Successful s3_add_word.')
+    # print('\n\nSuccessful s3_add_word.')
+    # pp = pprint.PrettyPrinter(indent=4)
+    # pp.pprint(json.loads(word))
+    # print('\n')
 
     return 200
 

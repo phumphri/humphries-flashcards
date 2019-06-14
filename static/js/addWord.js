@@ -1,10 +1,5 @@
 function addWord()
 {
-    wa.value = "0";
-    wc.value = "0";
-    ww.value = "0";
-    wp.value = "0.0";
-
     st.value = "Adding word.  Please wait."; 
 
     // If the browser does not support the XMLHttpRequest object, do nothing.
@@ -73,6 +68,19 @@ function addWord()
 
     word["word_diagram"] = word_diagram
 
+    // console.log(' ')
+    // console.log('addWord() was called for the following word:')
+    // console.log('word_spelling:  ' + word["word_spelling"])
+    // console.log('word_grammar:  ' + word["word_grammar"])
+    // console.log('word_definition:  ' + word["word_definition"])
+    // console.log('word_example:  ' + word["word_example"])
+    // console.log('word_attempts:  ' + word["word_attempts"])
+    // console.log('word_correct:  ' + word["word_correct"])
+    // console.log('word_wrong:  ' + word["word_wrong"])
+    // console.log('word_percentage:  ' + word["word_percentage"])
+    // console.log(' ')
+
+
     // Convert the word from a dictionary to a JSON string.
     word = JSON.stringify(word)
     
@@ -95,12 +103,6 @@ function addWord()
         return;
     }
     
-    request.open("POST", url, true);
-    
-    request.setRequestHeader("content-type", "application/json");
-    
-    request.send(word)
-    
     request.onreadystatechange = function ()
     {        
         if (request.readyState == XMLHttpRequest.DONE)
@@ -121,4 +123,10 @@ function addWord()
         }
         return
     }
+
+    request.open("POST", url, true);
+    
+    request.setRequestHeader("content-type", "application/json");
+    
+    request.send(word)
 }

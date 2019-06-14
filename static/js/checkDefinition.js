@@ -1,21 +1,22 @@
 function checkDefinition()
 {
-    var wordDefinition = wd.value;
-    var myDefinition = md.value;
+    wordDefinition = wd.value
+    myDefinition = md.value
     
-    var wordAttempts = 0;
-    var wordCorrect = 0;
-    var wordWrong = 0;
+    wordAttempts = 0
+    wordCorrect = 0
+    wordWrong = 0
+    wordPercentage = 0.0
 
-    var indexOfPeriod = wordDefinition.indexOf(".");
-    wordDefinition = wordDefinition.substr(1, indexOfPeriod);
+    indexOfPeriod = wordDefinition.indexOf(".")
+    wordDefinition = wordDefinition.substr(1, indexOfPeriod)
     
-    indexOfPeriod = myDefinition.indexOf(".");
-    myDefinition = myDefinition.substr(1, indexOfPeriod);
+    indexOfPeriod = myDefinition.indexOf(".")
+    myDefinition = myDefinition.substr(1, indexOfPeriod)
 
     if (isNaN(wa.value))
     {
-        wordAttempts = 0;
+        wordAttempts = 1;
     }
     else 
     {
@@ -45,25 +46,30 @@ function checkDefinition()
     }
     else 
     {
-        wordWrong = parseInt(ww.value);
+        wordWrong = parseInt(ww.value)
     }
 
     if (wordDefinition == myDefinition)
     {
         wordCorrect++
+        wordPercentage = Math.floor(((wordCorrect * 100) / wordAttempts))
         wa.value = wordAttempts.toString();
         wc.value = wordCorrect.toString();
         ww.value = wordWrong.toString();    
+        wp.value = wordPercentage.toString()   
         showWord()
         showDefinition()
-        updateWord()
+        showCanvas()
+        addWord()
     }
     else
     {
         wordWrong++
+        wordPercentage = Math.floor(((wordCorrect * 100) / wordAttempts))
         wa.value = wordAttempts.toString()
         wc.value = wordCorrect.toString()
         ww.value = wordWrong.toString()     
-        updateWord()
+        wp.value = wordPercentage.toString()   
+        addWord()
     }
 }

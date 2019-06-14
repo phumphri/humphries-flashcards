@@ -1,15 +1,16 @@
 function checkSpelling()
 {
-    var wordSpelling = ws.value;
-    var mySpelling = ms.value;
+    wordSpelling = ws.value
+    mySpelling = ms.value
     
-    var wordAttempts = 0;
-    var wordCorrect = 0;
-    var wordWrong = 0;
+    wordAttempts = 0
+    wordCorrect = 0
+    wordWrong = 0
+    wordPercentage = 0.0
 
     if (isNaN(wa.value)) 
     {
-        wordAttempts = 0;
+        wordAttempts = 1;
     }
     else
     {
@@ -35,25 +36,30 @@ function checkSpelling()
         wordWrong = parseInt(ww.value);
     }
 
+    console.log(' ')
     if (wordSpelling == mySpelling) 
     {
         wordCorrect++
-        wa.value = wordAttempts.toString();
-        wc.value = wordCorrect.toString();
-        ww.value = wordWrong.toString();    
+        wordPercentage = Math.floor(((wordCorrect * 100) / wordAttempts))
+        wa.value = wordAttempts.toString()
+        wc.value = wordCorrect.toString()
+        ww.value = wordWrong.toString()
+        wp.value = wordPercentage.toString()   
         showWord()
         showDefinition()
-        updateWord()
+        showCanvas()
+        addWord()
         st.value = "Correct!  "
-
     }
     else
     {
         wordWrong++;  
+        wordPercentage = Math.floor(((wordCorrect * 100) / wordAttempts))
         wa.value = wordAttempts.toString();
         wc.value = wordCorrect.toString();
         ww.value = wordWrong.toString();     
-        updateWord()
+        wp.value = wordPercentage.toString()   
+        addWord()
         st.value = "Wrong.  "
     }
 

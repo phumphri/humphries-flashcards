@@ -51,14 +51,15 @@ Flashcards
 <script type="text/javascript" src="{{ url_for('static', filename='js/hideCanvas.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/showCanvas.js') }}"></script>
 
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='js/updateWord.js') }}"></script> -->
+
 <script>
     window.onload = function () {
         checkScreen()
         bindings()
         getClasses()
         sc.addEventListener("click", function () { getWeeks(); })
-        sw.addEventListener("click", function () { getWords(); })
-        getFirstWord()
+        sw.addEventListener("click", function () { ws.value = ''; getWords(); })
     }
 </script>
 
@@ -76,7 +77,7 @@ Flashcards
         <div class="col-lg-2">
             <fieldset>
                 <legend>Selected Class</legend>
-                <select id="sc" class="input" size="3" multiple="single">
+                <select id="sc" class="input" size="3">
                     {% for class in classes %}
                     <option label="{{class}}">{{class}}</option>
                     {% endfor %}
@@ -89,7 +90,7 @@ Flashcards
         <div class="col-lg-2">
             <fieldset>
                 <legend>Selected Week</legend>
-                <select id="sw" class="input" size="3" multiple="single">
+                <select id="sw" class="input" size="3">
                     {% for class in classes %}
                     <option label="{{week}}">{{week}}</option>
                     {% endfor %}

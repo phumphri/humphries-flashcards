@@ -30,10 +30,6 @@ function getClasses()
         return
     }
     
-    request.open("GET", url, true)
-    
-    request.send(null)
-
     request.onreadystatechange = function ()
     {
         if (request.readyState == XMLHttpRequest.DONE)
@@ -49,7 +45,8 @@ function getClasses()
                     option.text = s
                     option.value = s
                     sc.add(option)
-                }            
+                }    
+                st.value = 'Select class.'
             }
             else if (request.status = 404)
             {
@@ -62,4 +59,7 @@ function getClasses()
         }           
         return
     }
+    request.open("GET", url, true)
+    
+    request.send(null)
 }

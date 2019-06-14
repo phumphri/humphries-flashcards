@@ -1,6 +1,7 @@
 function getWords() {
 
-    st.value = "Getting word.  Please wait.";
+    st.value = "Getting words.  Please wait.";
+    words_added = 0
 
     // If the browser does not support the XMLHttpRequest object, do nothing.
     if (!window.XMLHttpRequest) {
@@ -25,21 +26,11 @@ function getWords() {
         return
     }
 
-    request.open("GET", url, true)
-
-    request.send(null)
-
-    words_added = 0
-
     request.onreadystatechange = function () {
         if (request.readyState == XMLHttpRequest.DONE) {
             if (request.status == 200) {
 
                 // Clear session Storage.
-                // for (i = 0; i < sessionStorage.length; i++) {
-                //     key = 'word' + i.toString()
-                //     sessionStorage.removeItem(key)
-                // }
                 sessionStorage.clear()
 
                 // Parse the response string into a JSON object (associative array).
@@ -49,7 +40,6 @@ function getWords() {
                 // The "words" attribute has an array of "word" JSON objects.
                 words = words["words"]
 
-                st.value = "Words were found."
 
                 // Populate Session Storage with word JSON objects.
                 for (i in words) {
@@ -58,7 +48,15 @@ function getWords() {
                     item = JSON.stringify(word)
                     sessionStorage.setItem(key, item)
                     words_added += 1
-                    console.log('Key:  ' + key + '    Item:  ' + item)
+                    // console.log('Key:  ' + key + '    Item:  ' + item)
+                }
+                st.value = "Words were found."
+                // console.log(' ')
+                // console.log('ws.value:  ' + ws.value)
+                // console.log('ws.value.length:  ' + ws.value.length)
+                // console.log(' ')
+                if (ws.value.length == 0) {
+                    getFirstWord()
                 }
             }
             else if (request.status == 404) {
@@ -67,11 +65,16 @@ function getWords() {
             else {
                 st.value = "Unsuccessful request:  " + request.readyState + "  " + request.status + ".  Call Patrick."
             }
+        
         }
-        st.value += "\nWords added:  " + words_added
-        st.value += "\nsessionStorage.length:  " + sessionStorage.length
-        st.value += "\nlocation.host:  " + location.host
+        else {
+            st.value = "Waiting for server to respond.  Please wait."
+        }
         hideFields()
         return
     }
+
+    request.open("GET", url, true)
+
+    request.send(null)
 }

@@ -36,7 +36,6 @@ function getFirstWord()
             }
             drawDiagram()
         }
-        console.log('First word found:  ' + key + ':  ' + word["word_spelling"])
         break
     }
     hideFields()
