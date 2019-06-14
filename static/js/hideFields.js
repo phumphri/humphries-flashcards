@@ -3,8 +3,7 @@ function hideFields() {
     if (hd.checked) {
         hideDefinition()
         showWord()
-        di.className = "hidden"     /*  Drawing Instructions    */
-        dc.className = "hidden"     /*  Drawing Canvas          */
+        hideCanvas()
         return
     }
 
@@ -12,8 +11,7 @@ function hideFields() {
     if (hs.checked) {
         showDefinition()
         hideWord()
-        di.className = "hidden"     /*  Drawing Instructions    */
-        dc.className = "hidden"     /*  Drawing Canvas          */
+        hideCanvas()
         return
     }
 
@@ -21,8 +19,7 @@ function hideFields() {
     if (hn.checked) {
         showWord()
         showDefinition()
-        di.className = "visible"    /*  Drawing Instructions    */
-        dc.className = "visible"    /*  Drawing Canvas          */    
+        showCanvas()
         return
     }
 }

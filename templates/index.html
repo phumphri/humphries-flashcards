@@ -48,6 +48,8 @@ Flashcards
 <script type="text/javascript" src="{{ url_for('static', filename='js/clearDiagram.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/checkScreen.js') }}"></script>
 
+<script type="text/javascript" src="{{ url_for('static', filename='js/hideCanvas.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/showCanvas.js') }}"></script>
 
 <script>
     window.onload = function () {
@@ -185,7 +187,7 @@ Flashcards
                     <legend>Actions</legend>
                     <button type="button" onclick="checkSpelling(); ">Spelling</button>
                     <button type="button" onclick="checkDefinition(); ">Definition</button>
-                    <button type="button" onclick="showWord(); showDefinition(); ">Show</button>
+                    <button type="button" onclick="showWord(); showDefinition(); showCanvas(); ">Show</button>
                     <button type="button" id="cw" onclick="clearWord(); ">Clear</button>
                     <button type="button" id="aw" onclick="addWord();">Add</button>
                     <button type="button" id="dw" onclick="deleteWord(); ">Delete</button>
