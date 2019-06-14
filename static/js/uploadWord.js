@@ -1,4 +1,4 @@
-function addWord()
+function uploadWord()
 {
     st.value = "Adding word.  Please wait."; 
 
@@ -69,7 +69,7 @@ function addWord()
     word["word_diagram"] = word_diagram
 
     // console.log(' ')
-    // console.log('addWord() was called for the following word:')
+    // console.log('uploadWord() was called for the following word:')
     // console.log('word_spelling:  ' + word["word_spelling"])
     // console.log('word_grammar:  ' + word["word_grammar"])
     // console.log('word_definition:  ' + word["word_definition"])

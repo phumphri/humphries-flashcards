@@ -17,7 +17,7 @@ Flashcards
 <script type="text/javascript" src="{{ url_for('static', filename='js/getLastWord.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/getRandomWord.js') }}"></script>
 
-<script type="text/javascript" src="{{ url_for('static', filename='js/addWord.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/uploadWord.js') }}"></script>
 <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/updateWord.js') }}"></script> -->
 <script type="text/javascript" src="{{ url_for('static', filename='js/deleteWord.js') }}"></script>
 
@@ -190,10 +190,10 @@ Flashcards
                     <button type="button" onclick="checkDefinition(); ">Definition</button>
                     <button type="button" onclick="showWord(); showDefinition(); showCanvas(); ">Show</button>
                     <button type="button" id="cw" onclick="clearWord(); ">Clear</button>
-                    <button type="button" id="aw" onclick="addWord();">Add</button>
+                    <button type="button" id="aw" onclick="uploadWord();">Upload</button>
                     <button type="button" id="dw" onclick="deleteWord(); ">Delete</button>
-                    <a href="/oops" target="_blank"><b>Oops!</b></a>
-                    <a href="/bummer" target="_blank"><b>Bummer!</b></a>
+                    <!-- <a href="/oops" target="_blank"><b>Oops!</b></a>
+                    <a href="/bummer" target="_blank"><b>Bummer!</b></a> -->
                 </fileset>
 
                 <!-- Status -->

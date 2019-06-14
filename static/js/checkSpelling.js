@@ -48,7 +48,7 @@ function checkSpelling()
         showWord()
         showDefinition()
         showCanvas()
-        addWord()
+        uploadWord()
         st.value = "Correct!  "
     }
     else
@@ -59,7 +59,7 @@ function checkSpelling()
         wc.value = wordCorrect.toString();
         ww.value = wordWrong.toString();     
         wp.value = wordPercentage.toString()   
-        addWord()
+        uploadWord()
         st.value = "Wrong.  "
     }
 

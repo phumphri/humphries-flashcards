@@ -60,7 +60,8 @@ function checkDefinition()
         showWord()
         showDefinition()
         showCanvas()
-        addWord()
+        uploadWord()
+        st.value = "Correct!  "
     }
     else
     {
@@ -70,6 +71,7 @@ function checkDefinition()
         wc.value = wordCorrect.toString()
         ww.value = wordWrong.toString()     
         wp.value = wordPercentage.toString()   
-        addWord()
+        uploadWord()
+        st.value = "Wrong.  "
     }
 }
