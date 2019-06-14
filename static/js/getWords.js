@@ -1,4 +1,4 @@
-function getWords() {
+function getWords(get_first_word) {
 
     st.value = "Getting words.  Please wait.";
     words_added = 0
@@ -55,7 +55,7 @@ function getWords() {
                 // console.log('ws.value:  ' + ws.value)
                 // console.log('ws.value.length:  ' + ws.value.length)
                 // console.log(' ')
-                if (ws.value.length == 0) {
+                if (get_first_word == true) {
                     getFirstWord()
                 }
             }
@@ -70,7 +70,7 @@ function getWords() {
         else {
             st.value = "Waiting for server to respond.  Please wait."
         }
-        hideFields()
+        // hideFields()
         return
     }
 

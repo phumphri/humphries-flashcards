@@ -1,6 +1,6 @@
 function uploadWord()
 {
-    st.value = "Adding word.  Please wait."; 
+    st.value = "Uploading word.  Please wait."; 
 
     // If the browser does not support the XMLHttpRequest object, do nothing.
     if (!window.XMLHttpRequest)
@@ -88,11 +88,11 @@ function uploadWord()
     hostAndPort = location.host; 
     if (hostAndPort == '127.0.0.1:5000')
     {
-        url = "http://" + hostAndPort + "/add_word/" + class_code + "/" + week
+        url = "http://" + hostAndPort + "/upload_word/" + class_code + "/" + week
     }
     else
     {
-        url = "https://" + hostAndPort + "/add_word/" + class_code + "/" + week
+        url = "https://" + hostAndPort + "/upload_word/" + class_code + "/" + week
     }    
     // Fetch the contents of that URL using the XMLHttpRequest object.
     var request = new XMLHttpRequest();
@@ -109,8 +109,8 @@ function uploadWord()
         {
             if (request.status == 200)
             {            
-                st.value = 'Word was added.'
-                getWords()
+                st.value = 'Word was uploaded.'
+                getWords(false)
             }
             else if (request.status == 404)
             {            
@@ -120,6 +120,9 @@ function uploadWord()
             {
                 st.value = "Unsuccessful request:  " + request.readyState + "  " + request.status;
             }
+        }
+        else {
+            st.value = "Waiting for confirmation from the server.  Please wait"
         }
         return
     }

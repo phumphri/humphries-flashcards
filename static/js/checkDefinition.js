@@ -57,10 +57,10 @@ function checkDefinition()
         wc.value = wordCorrect.toString();
         ww.value = wordWrong.toString();    
         wp.value = wordPercentage.toString()   
+        uploadWord()
         showWord()
         showDefinition()
         showCanvas()
-        uploadWord()
         st.value = "Correct!  "
     }
     else

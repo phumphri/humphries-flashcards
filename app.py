@@ -153,7 +153,7 @@ def get_words(class_code, week):
     return response
 
 # Mutator Add Word
-@app.route('/add_word/<class_code>/<week>', methods=['POST'])
+@app.route('/upload_word/<class_code>/<week>', methods=['POST'])
 def add_word(class_code, week):
 
     try:
@@ -168,7 +168,7 @@ def add_word(class_code, week):
             # print('\n')
 
             # Database update returns an HTTP status code.
-            status_code = s3_add_word(class_code, week, word)
+            status_code = s3_upload_word(class_code, week, word)
 
             # Format a resonse with just the status code.
             response = Response(status=status_code)
@@ -432,7 +432,7 @@ def s3_get_weeks(class_code):
     return weeks
 
 # S3 Add Word
-def s3_add_word(class_code, week, word):
+def s3_upload_word(class_code, week, word):
 
     bucket_name = 'humphries-flashcards'
 
@@ -457,7 +457,7 @@ def s3_add_word(class_code, week, word):
         client.put_object(Body=word, Bucket=bucket_name, Key=key)
 
     except Exception as e:
-        print('Exception was thrown in s3_add_word:', str(e))
+        print('Exception was thrown in s3_upload_word:', str(e))
         print('bucket_name:', bucket_name)
         print('class_code:', class_code)
         print('week:', week)
