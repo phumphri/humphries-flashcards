@@ -39,11 +39,19 @@ function bindings()
         aw.className = "visible"            /*  Add Word Button     */
         dw.className = "visible"            /*  Delete Word Button  */
         cw.className = "visible"            /*  Clear Word Button   */
+        ws.readOnly = false                 /*  Word Spelling Updateable    */
+        wd.readOnly = false                 /*  Word Definition Updateable  */
+        wg.readOnly = false                 /*  Word Grammar Updateable     */
+        we.readOnly = false                 /*  Word Example Updateable     */
     }
     else
     {
         aw.className = "hidden"             /*  Add Word Button     */
         dw.className = "hidden"             /*  Delete Word Button  */
         cw.className = "hidden"             /*  Clear Word Button   */
+        ws.readOnly = true                 /*  Word Spelling Read Only      */
+        wd.readOnly = true                 /*  Word Definition Read Only    */
+        wg.readOnly = true                 /*  Word Grammar Read Only       */
+        we.readOnly = true                 /*  Word Example Read Only       */
     }
 }
