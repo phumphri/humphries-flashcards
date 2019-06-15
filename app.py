@@ -31,7 +31,7 @@ from flask_cors import CORS
 # Dynamically arrange objects on webpage.
 from flask_bootstrap import Bootstrap   
 
-# S3 access.  This is to be replaced with a Postgres API.
+# S3 access.  
 import boto3                            
 import botocore
 
@@ -130,6 +130,7 @@ def get_weeks(class_code):
     # Convert the dictionary into a json string.
     weeks = json.dumps(weeks)
 
+
     # Return a response.
     response = Response(weeks, status=200, mimetype='application/json')
     return response
@@ -162,10 +163,6 @@ def add_word(class_code, week):
 
             # The transported string is converted into a json object.
             word = request.get_json()
-            # print('\n\nCalled add_word/' + class_code + '/' + week + ' with the following word:')
-            # pp = pprint.PrettyPrinter(indent=4)
-            # pp.pprint(word)
-            # print('\n')
 
             # Database update returns an HTTP status code.
             status_code = s3_upload_word(class_code, week, word)
@@ -189,6 +186,7 @@ def add_word(class_code, week):
         print('word:')
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(word)
+
         raise InternalServerError('An Exception was thrown:  ' + str(f))
 
 # Mutator Delete Word
@@ -201,8 +199,6 @@ def delete_word(class_code, week):
 
             # The transported string is converted into a json object.
             word = request.get_json()
-            # pp = pprint.PrettyPrinter(indent=4)
-            # pp.pprint(word)
 
             # S3 update returns an HTTP status code.
             status_code = s3_delete_word(class_code, week, word)
@@ -226,6 +222,7 @@ def delete_word(class_code, week):
         print('word:')
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(word)
+
         raise InternalServerError('An Exception was thrown:  ' + str(f))
 
 
@@ -246,25 +243,32 @@ def s3_get_classes():
                               aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
 
     except Exception as e:
-        print("e:", e)
+        print("Exception was thrown:", str(e))
+        raise InternalServerError('Exception was thrown:  ' + str(e))
 
     try:
-        response = client.list_objects(Bucket=bucket_name)
-        for response_item in response.items():
-            if response_item[0] == 'Contents':
-                json_objects = response_item[1]
-                for json_object in json_objects: 
-                    if json_object['Key'].endswith('.json'):
-                        key = json_object['Key']
-                        i = key.find('/')
-                        if i < 0:
-                            s = key
-                        else:
-                            s = key[:i]
-                        try:
-                            classes.index(s)
-                        except ValueError as e:
-                            classes.append(s)
+        response = client.list_objects(Bucket=bucket_name, Prefix="", Delimiter="/")
+
+        for commonPrefix in response["CommonPrefixes"]:
+            prefix = commonPrefix["Prefix"].replace('/', '')
+            classes.append(prefix)
+
+
+
+            # if response_item[0] == 'Contents':
+            #     json_objects = response_item[1]
+            #     for json_object in json_objects: 
+            #         if json_object['Key'].endswith('.json'):
+            #             key = json_object['Key']
+            #             i = key.find('/')
+            #             if i < 0:
+            #                 s = key
+            #             else:
+            #                 s = key[:i]
+            #             try:
+            #                 classes.index(s)
+            #             except ValueError as e:
+            #                 classes.append(s)
 
     except Exception as e:
         print('Exception was thrown:', str(e))
@@ -277,9 +281,10 @@ def s3_get_weeks(class_code):
 
     bucket_name = 'humphries-flashcards'
     
-    # This will contained the filtered selection of the contents of the bucket.
+    # This will contained the weeks within a class.
     weeks = []
     
+    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
     SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
     
     try:
@@ -292,25 +297,21 @@ def s3_get_weeks(class_code):
         raise InternalServerError('Exception was thrown:  ' + str(e))
 
     try:
-        response = client.list_objects(Bucket=bucket_name)
-        for response_item in response.items():
-            if response_item[0] == 'Contents':
-                json_objects = response_item[1]
-                for json_object in json_objects: 
-                    
-                    if json_object['Key'].startswith(class_code):
-                        if json_object['Key'].endswith('.json'):
-                            key = json_object['Key']
-                            i = key.find('/')
-                            j = key.rfind('/')
-                            if i < 0:
-                                s = key
-                            else:
-                                s = key[i+1:j]
-                            try:
-                                weeks.index(s)
-                            except ValueError as e:
-                                weeks.append(s)
+
+        prefix = class_code + '/'
+
+        response = client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter="/")
+
+        print('\n\nresponse:')
+
+        for commonPrefix in response["CommonPrefixes"]:
+
+            # Locate the week that is between the first and last forward slashes.
+            prefix = commonPrefix["Prefix"]
+            i = prefix.find('/')
+            j = prefix.rfind('/')
+            week = prefix[i+1:j]
+            weeks.append(week)
 
     except Exception as e:
         print('Exception was thrown:', str(e))
@@ -338,44 +339,27 @@ def s3_get_words(class_code, week):
         print('Exception was thrown:', str(e))
         raise InternalServerError('Exception was thrown:  ' + str(e))
 
+    prefix = class_code + '/' + week + '/'
+    
     try:
-        response = client.list_objects(Bucket=bucket_name)
-        for response_item in response.items():
-            if response_item[0] == 'Contents':
-                json_objects = response_item[1]
-                for json_object in json_objects: 
-                    key = json_object['Key']
+        response = client.list_objects(Bucket=bucket_name, Prefix=prefix)
 
-                    # Only select words for the selected class adn week.
-                    if key.startswith(class_code + '/' + week):
+        for content in response["Contents"]:
 
-                        o = client.get_object(Bucket=bucket_name, Key=key)
+            key = content["Key"]
+   
+            if key.endswith('.json'):
 
-                        # Only select S3 objects that are json files.
-                        # There will be media files stored with the json files.
-                        if key.endswith('.json'):
+                object = client.get_object(Bucket=bucket_name, Key=key)
 
-                            # print('\n\nKey:' + key)
+                body = object["Body"].read().decode('utf8')
 
-                            s = o["Body"].read().decode('utf8')
+                body = json.loads(body)
 
-                            s = json.loads(s)
-                            # print('Download from S3:')
-                            # pp = pprint.PrettyPrinter(indent=4)
-                            # pp.pprint(s)
+                if "word_diagram" not in body:
+                    body["word_diagram"] = [{"dummy":"dummy"}]
 
-                            if "word_diagram" not in s:
-                                print("\n\nword_diagram was None.")
-                                s["word_diagram"] = [{"dummy":"dummy"}]
-                                print("word_diagram was set to dummy.\n")
-
-                            # Add word only if it does not exist in words.
-                            try:
-                                words.index(s)
-                                # print('word was not added to words.')
-                            except ValueError as e:
-                                words.append(s)
-                                # print('word was added to words.')
+                words.append(body)
 
     except Exception as e:
         print('Exception was thrown:', str(e))
@@ -383,53 +367,6 @@ def s3_get_words(class_code, week):
         raise InternalServerError('Exception was thrown:  ' + str(e))
 
     return words
-
-# S3 Get Weeks
-def s3_get_weeks(class_code):
-
-    bucket_name = 'humphries-flashcards'
-    
-    # This will contained the filtered selection of the contents of the bucket.
-    weeks = []
-    
-    ACCESS_KEY_ID_FOR_S3=os.environ['ACCESS_KEY_ID_FOR_S3']
-    SECRET_ACCESS_KEY_FOR_S3=os.environ['SECRET_ACCESS_KEY_FOR_S3']
-    
-    try:
-        client = boto3.client('s3', 
-                              aws_access_key_id=ACCESS_KEY_ID_FOR_S3, 
-                              aws_secret_access_key=SECRET_ACCESS_KEY_FOR_S3)
-
-    except Exception as e:
-        print('Exception was thrown:', str(e))
-        raise InternalServerError('Exception was thrown:  ' + str(e))
-
-    try:
-        response = client.list_objects(Bucket=bucket_name)
-        for response_item in response.items():
-            if response_item[0] == 'Contents':
-                json_objects = response_item[1]
-                for json_object in json_objects: 
-                    
-                    if json_object['Key'].startswith(class_code):
-                        if json_object['Key'].endswith('.json'):
-                            key = json_object['Key']
-                            i = key.find('/')
-                            j = key.rfind('/')
-                            if i < 0:
-                                s = key
-                            else:
-                                s = key[i+1:j]
-                            try:
-                                weeks.index(s)
-                            except ValueError as e:
-                                weeks.append(s)
-
-    except Exception as e:
-        print('Exception was thrown:', str(e))
-        raise InternalServerError('Exception was thrown:  ' + str(e))
-
-    return weeks
 
 # S3 Add Word
 def s3_upload_word(class_code, week, word):
@@ -466,13 +403,7 @@ def s3_upload_word(class_code, week, word):
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(word)
 
-
         raise InternalServerError('Exception was thrown:  ' + str(e))
-
-    # print('\n\nSuccessful s3_add_word.')
-    # pp = pprint.PrettyPrinter(indent=4)
-    # pp.pprint(json.loads(word))
-    # print('\n')
 
     return 200
 
@@ -510,6 +441,7 @@ def s3_delete_word(class_code, week, word):
         print('word:')
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(word)
+
         raise InternalServerError('Exception was thrown:  ' + str(e))
 
     return 200
