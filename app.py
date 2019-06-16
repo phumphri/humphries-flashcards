@@ -302,8 +302,6 @@ def s3_get_weeks(class_code):
 
         response = client.list_objects(Bucket=bucket_name, Prefix=prefix, Delimiter="/")
 
-        print('\n\nresponse:')
-
         for commonPrefix in response["CommonPrefixes"]:
 
             # Locate the week that is between the first and last forward slashes.
