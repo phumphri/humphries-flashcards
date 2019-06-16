@@ -1,7 +1,7 @@
 function checkScreen() {
 
     // if the screen is not big enough
-    if (screen.width < 1536) {
+    if (screen.width < 1535) {
 
         // If the browser does not support the XMLHttpRequest object, do nothing.
         if (!window.XMLHttpRequest) {
