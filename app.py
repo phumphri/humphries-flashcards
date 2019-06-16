@@ -84,12 +84,12 @@ def internal_server_error(e):
 def simulate_internal_server_error():
     raise InternalServerError('Relax.  This was only a test.')
     
-@app.route("/screen_too_small")
-def screen_too_small_error():
-    print('\n\nScreen too small was called.')
+@app.route("/screen_too_small/<screen_width>")
+def screen_too_small_error(screen_width):
+    print('\n\nScreen too small was called.  Screen width:', screen_width)
     return render_template('500.html', 
         project_name="Bummer!", 
-        message_from_the_application = "The screen is too small.  Need a width of 1920 pixels or greater.",
+        message_from_the_application = "The screen is too small.  Need a width of 1920 pixels or greater.  It was " + screen_width + ".",
         current_time=datetime.datetime.utcnow()), 500
     
 # Error Handler for Not Implemented Exception

@@ -12,10 +12,10 @@ function checkScreen() {
         // Encode the user input as query parameters in a URL.
         hostAndPort = location.host
         if (hostAndPort == '127.0.0.1:5000') {
-            url = "http://" + hostAndPort + "/screen_too_small"
+            url = "http://" + hostAndPort + "/screen_too_small/" + screen.width
         }
         else {
-            url = "https://" + hostAndPort + "/screen_too_small"
+            url = "https://" + hostAndPort + "/screen_too_small/" + screen.width
         }
         // Fetch the contents of that URL using the XMLHttpRequest object.
         var request = new XMLHttpRequest();
